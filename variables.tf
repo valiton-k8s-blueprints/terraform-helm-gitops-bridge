@@ -25,3 +25,9 @@ variable "apps" {
   type        = any
   default     = {}
 }
+
+variable "destroy_timeout" {
+  description = "Time in seconds to wait between detroying apps and argocd helm resources"
+  type        = number
+  default     = 120
+}

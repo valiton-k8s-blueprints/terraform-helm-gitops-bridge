@@ -10,6 +10,10 @@ terraform {
       source  = "hashicorp/kubernetes"
       version = ">= 2.22.0"
     }
+    time = {
+      source  = "hashicorp/time"
+      version = ">= 0.13.0"
+    }
   }
 
   # ##  Used for end-to-end testing on project; update to suit your needs
