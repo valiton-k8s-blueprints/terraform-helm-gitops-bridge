@@ -69,7 +69,6 @@ resource "helm_release" "argocd" {
       type  = try(set_sensitive.value.type, null)
     }
   }
-
 }
 
 
@@ -134,6 +133,14 @@ resource "kubernetes_secret_v1" "cluster" {
   depends_on = [helm_release.argocd]
 }
 
+################################################################################
+# Wait before destroying argocd
+################################################################################
+resource "time_sleep" "wait_for_bootstrap_destroy" {
+  depends_on = [kubernetes_secret_v1.cluster]
+
+  destroy_duration = "${var.destroy_timeout}s"
+}
 
 ################################################################################
 # Create App of Apps
@@ -153,5 +160,5 @@ resource "helm_release" "bootstrap" {
     EOT
   ]
 
-  depends_on = [resource.kubernetes_secret_v1.cluster]
+  depends_on = [time_sleep.wait_for_bootstrap_destroy]
 }
